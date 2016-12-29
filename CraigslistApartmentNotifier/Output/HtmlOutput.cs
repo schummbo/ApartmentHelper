@@ -20,7 +20,8 @@
                 WriteTableHeader(sb, confidenceLevel);
 
                 foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
-                                                                        .OrderBy(x => x.TravelInfo.TravelTimeSeconds))
+                                                                        .OrderBy(x => x.TravelInfo.TravelTimeSeconds)
+                                                                        .ThenBy(x => x.TravelInfo.WalkingTimeSeconds))
                 {
                     WriteRow(apartmentListing, sb);
                 }
@@ -42,8 +43,9 @@
             sb.AppendLine($"<td>Title</td>");
             sb.AppendLine($"<td>Price</td>");
             sb.AppendLine($"<td>Housing</td>");
-            sb.AppendLine($"<td>Travel Time (mins)</td>");
+            sb.AppendLine($"<td>Travel Time</td>");
             sb.AppendLine($"<td>Buses</td>");
+            sb.AppendLine($"<td>Walking</td>");
             sb.AppendLine($"<td>Locality</td>");
             sb.AppendLine("</tr>");
         }
@@ -67,6 +69,10 @@
             }
 
             sb.AppendLine($"<td>{listing.TravelInfo.NumberOfBuses}</td>");
+
+            TimeSpan walkingTime = TimeSpan.FromSeconds(listing.TravelInfo.WalkingTimeSeconds);
+
+            sb.AppendLine($"<td>{walkingTime.Minutes} m</td>");
             sb.AppendLine($"<td>{listing.CityName}</td>");
 
             sb.AppendLine("</tr>");

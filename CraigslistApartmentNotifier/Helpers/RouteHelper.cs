@@ -22,7 +22,20 @@
 
             travelInfo.NumberOfBuses = GetNumberOfBuses(googleResponse);
 
+            travelInfo.WalkingTimeSeconds = GetTotalWalkingTime(googleResponse);
+
             return travelInfo;
+        }
+
+        private int GetTotalWalkingTime(JObject googleResponse)
+        {
+            dynamic resp = googleResponse;
+
+            IEnumerable<dynamic> steps = ((IEnumerable)resp.routes[0].legs[0].steps).Cast<dynamic>();
+
+            IEnumerable<dynamic> transitSteps = steps.Where(x => x.travel_mode == "WALKING");
+
+            return transitSteps.Sum(x => x.duration.value);
         }
 
         private JObject GetGoogleDirectionsResponse(ApartmentListing listing)
