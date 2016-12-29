@@ -1,5 +1,6 @@
 ﻿namespace CraigslistApartmentNotifier.Helpers
 {
+    using System;
     using Entities;
 
     public class ConfidenceDecider
@@ -20,6 +21,11 @@
                 if (listing.TravelInfo.NumberOfBuses == 1)
                 {
                     level = ConfidenceLevel.ReallyHigh;
+
+                    if (string.Equals(listing.CityName, "seattle", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        level = ConfidenceLevel.Perfect;
+                    }
                 }
             }
 

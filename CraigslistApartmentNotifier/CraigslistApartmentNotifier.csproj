@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\CityHelper.cs" />
     <Compile Include="Helpers\ConfidenceDecider.cs" />
     <Compile Include="Helpers\RouteHelper.cs" />
     <Compile Include="Output\HtmlOutput.cs" />

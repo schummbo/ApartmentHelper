@@ -51,6 +51,8 @@
 
                     listing.TravelInfo = new RouteHelper().GetTravelInfo(listing);
 
+                    listing.CityName = new CityHelper().GetCityName(listing);
+
                     listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
 
                     listings.Add(listing);

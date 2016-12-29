@@ -44,6 +44,7 @@
             sb.AppendLine($"<td>Housing</td>");
             sb.AppendLine($"<td>Travel Time (mins)</td>");
             sb.AppendLine($"<td>Busses</td>");
+            sb.AppendLine($"<td>Locality</td>");
             sb.AppendLine("</tr>");
         }
 
@@ -66,6 +67,7 @@
             }
 
             sb.AppendLine($"<td>{listing.TravelInfo.NumberOfBuses}</td>");
+            sb.AppendLine($"<td>{listing.CityName}</td>");
 
             sb.AppendLine("</tr>");
         }

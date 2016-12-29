@@ -15,5 +15,7 @@
         public int Price { get; set; }
 
         public string Housing { get; set; }
+
+        public string CityName { get; set; }
     }
 }
