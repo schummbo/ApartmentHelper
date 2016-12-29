@@ -7,20 +7,20 @@
     {
         public ConfidenceLevel GetConfidenceLevel(ApartmentListing listing)
         {
-            ConfidenceLevel level = ConfidenceLevel.Low;
+            ConfidenceLevel level = ConfidenceLevel.Unknown;
 
             if (!string.IsNullOrWhiteSpace(listing.Origin))
             {
-                level = ConfidenceLevel.Medium;
+                level = ConfidenceLevel.Low;
             }
 
             if (listing.TravelInfo.TravelTimeSeconds.HasValue && listing.TravelInfo?.TravelTimeSeconds.Value <= 3600)
             {
-                level = ConfidenceLevel.High;
+                level = ConfidenceLevel.Medium;
 
                 if (listing.TravelInfo.NumberOfBuses == 1)
                 {
-                    level = ConfidenceLevel.ReallyHigh;
+                    level = ConfidenceLevel.High;
 
                     if (string.Equals(listing.CityName, "seattle", StringComparison.InvariantCultureIgnoreCase))
                     {

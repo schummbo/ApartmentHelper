@@ -39,8 +39,11 @@
             
             int tomorrowAt9 = (int)ConvertToUnixTimestamp(next9);
 
+            string url =
+                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={tomorrowAt9}&transit_routing_preference=fewer_transfers&key={apiKey}";
+
             WebClient client = new WebClient();
-            string json = client.DownloadString($"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={tomorrowAt9}&key={apiKey}");
+            string json = client.DownloadString(url);
 
             return JObject.Parse(json);
         }

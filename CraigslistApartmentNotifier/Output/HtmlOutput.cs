@@ -43,7 +43,7 @@
             sb.AppendLine($"<td>Price</td>");
             sb.AppendLine($"<td>Housing</td>");
             sb.AppendLine($"<td>Travel Time (mins)</td>");
-            sb.AppendLine($"<td>Busses</td>");
+            sb.AppendLine($"<td>Buses</td>");
             sb.AppendLine($"<td>Locality</td>");
             sb.AppendLine("</tr>");
         }
