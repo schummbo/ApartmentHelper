@@ -1,6 +1,6 @@
 ﻿namespace CraigslistApartmentNotifier.Helpers
 {
-    using PageEntities;
+    using Entities;
 
     public class ConfidenceDecider
     {

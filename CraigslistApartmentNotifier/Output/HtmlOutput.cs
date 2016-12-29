@@ -5,7 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using PageEntities;
+    using Entities;
 
     public class HtmlOutput
     {

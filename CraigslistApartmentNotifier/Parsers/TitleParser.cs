@@ -1,7 +1,7 @@
 ﻿namespace CraigslistApartmentNotifier.Parsers
 {
+    using Entities;
     using HtmlAgilityPack;
-    using PageEntities;
 
     public class TitleParser : BaseParser<Title>
     {

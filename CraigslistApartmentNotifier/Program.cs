@@ -3,10 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Entities;
     using Helpers;
     using HtmlAgilityPack;
     using Output;
-    using PageEntities;
     using Parsers;
 
     public class Program
@@ -47,7 +47,7 @@
 
                 listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
 
-                listing.TravelInfo = new DistanceHelper().GetTravelInfo(listing);
+                listing.TravelInfo = new RouteHelper().GetTravelInfo(listing);
 
                 listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
 

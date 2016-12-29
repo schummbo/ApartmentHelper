@@ -1,4 +1,4 @@
-﻿namespace CraigslistApartmentNotifier.PageEntities
+﻿namespace CraigslistApartmentNotifier.Entities
 {
     public class Title
     {

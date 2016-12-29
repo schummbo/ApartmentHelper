@@ -1,13 +1,14 @@
 ﻿namespace CraigslistApartmentNotifier.Helpers
 {
     using System;
+    using System.Configuration;
     using System.Linq;
     using System.Net;
     using System.Web;
+    using Entities;
     using Newtonsoft.Json.Linq;
-    using PageEntities;
 
-    public class DistanceHelper
+    public class RouteHelper
     {
         public TravelInfo GetTravelInfo(ApartmentListing listing)
         {
@@ -41,8 +42,10 @@
 
             int tomorrowAt9 = (int) ConvertToUnixTimestamp(next9);
 
+            string distanceMatrixKey = ConfigurationManager.AppSettings["GoogleDistanceMatrixApiKey"];
+
             string url =
-                $"https://maps.googleapis.com/maps/api/distancematrix/json?origins={encodedOrigin}&destinations=redacted&mode=transit&units=imperial&arrival_time={tomorrowAt9}&traffic_model=pessimistic&transit_routing_preference=fewer_transfers&key=AIzaSyDZZuzZB3Sx4ptSHuKGGQGWpC1cNLM6OCQ";
+                $"https://maps.googleapis.com/maps/api/distancematrix/json?origins={encodedOrigin}&destinations=47.613430,%20-122.194937&mode=transit&units=imperial&arrival_time={tomorrowAt9}&traffic_model=pessimistic&transit_routing_preference=fewer_transfers&key={distanceMatrixKey}";
 
 
             WebClient webClient = new WebClient();

@@ -42,11 +42,8 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Spatial, Version=5.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Spatial.5.7.0\lib\net40\System.Spatial.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -57,13 +54,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ConfidenceDecider.cs" />
-    <Compile Include="Helpers\DistanceHelper.cs" />
+    <Compile Include="Helpers\RouteHelper.cs" />
     <Compile Include="Output\HtmlOutput.cs" />
-    <Compile Include="PageEntities\ApartmentListing.cs" />
-    <Compile Include="PageEntities\ConfidenceLevel.cs" />
-    <Compile Include="PageEntities\MapPoint.cs" />
-    <Compile Include="PageEntities\Title.cs" />
-    <Compile Include="PageEntities\TravelInfo.cs" />
+    <Compile Include="Entities\ApartmentListing.cs" />
+    <Compile Include="Entities\ConfidenceLevel.cs" />
+    <Compile Include="Entities\MapPoint.cs" />
+    <Compile Include="Entities\Title.cs" />
+    <Compile Include="Entities\TravelInfo.cs" />
     <Compile Include="Parsers\AddressParser.cs" />
     <Compile Include="Parsers\BaseParser.cs" />
     <Compile Include="Parsers\MapPointParser.cs" />
