@@ -1,6 +1,8 @@
 ﻿namespace CraigslistApartmentNotifier.Helpers
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Linq;
     using System.Net;
@@ -14,69 +16,51 @@
         {
             TravelInfo travelInfo = new TravelInfo();
 
-            travelInfo.TravelTimeSeconds = GetTravelDuration(listing);
+            JObject googleResponse = GetGoogleDirectionsResponse(listing);
 
-            travelInfo.NumberOfTransfers = GetNumberOfTransfers(listing);
+            travelInfo.TravelTimeSeconds = GetTravelDuration(googleResponse);
+
+            travelInfo.NumberOfBuses = GetNumberOfBuses(googleResponse);
 
             return travelInfo;
         }
 
-        private static int GetNumberOfTransfers(ApartmentListing listing)
+        private JObject GetGoogleDirectionsResponse(ApartmentListing listing)
         {
-            return 1;
-        }
+            string apiKey = ConfigurationManager.AppSettings["GoogleDirectionsApiKey"];
+            string destination = ConfigurationManager.AppSettings["Destination"];
 
-        private static int? GetTravelDuration(ApartmentListing listing)
-        {
-            if (listing.Origin == null)
-            {
-                return null;
-            }
-
+            string encodedDestination = HttpUtility.UrlEncode(destination);
             string encodedOrigin = HttpUtility.UrlEncode(listing.Origin);
 
             // need to make sure this isn't a weekend
             DateTime tomorrow = DateTime.Now.AddDays(1);
             DateTime next9 = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 9, 0, 0);
+            
+            int tomorrowAt9 = (int)ConvertToUnixTimestamp(next9);
 
+            WebClient client = new WebClient();
+            string json = client.DownloadString($"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={tomorrowAt9}&key={apiKey}");
 
-            int tomorrowAt9 = (int) ConvertToUnixTimestamp(next9);
+            return JObject.Parse(json);
+        }
 
-            string distanceMatrixKey = ConfigurationManager.AppSettings["GoogleDistanceMatrixApiKey"];
+        private static int GetNumberOfBuses(JObject googleResponse)
+        {
+            dynamic resp = googleResponse;
 
-            string url =
-                $"https://maps.googleapis.com/maps/api/distancematrix/json?origins={encodedOrigin}&destinations=47.613430,%20-122.194937&mode=transit&units=imperial&arrival_time={tomorrowAt9}&traffic_model=pessimistic&transit_routing_preference=fewer_transfers&key={distanceMatrixKey}";
+            IEnumerable<dynamic> steps = ((IEnumerable) resp.routes[0].legs[0].steps).Cast<dynamic>();
 
+            IEnumerable<dynamic> transitSteps = steps.Where(x => x.travel_mode == "TRANSIT");
 
-            WebClient webClient = new WebClient();
-            string json = webClient.DownloadString(url);
+            return transitSteps.Count();
+        }
 
-            JObject j = JObject.Parse(json);
+        private static int? GetTravelDuration(JObject googleResponse)
+        {
+            dynamic resp = googleResponse as dynamic;
 
-            JToken rows = j["rows"];
-
-            int travelDuration = 0;
-
-            if (rows.Any())
-            {
-                JToken elements = j["rows"][0]["elements"];
-
-                if (elements.Any())
-                {
-                    JToken firstElement = elements[0];
-                    JToken duration = firstElement["duration"];
-
-                    if (duration != null)
-                    {
-                        travelDuration = duration["value"].ToObject<int>();
-                    }
-                }
-            }
-
-            if (travelDuration == 0)
-                return null;
-
-            return travelDuration;
+            return resp.routes[0].legs[0].duration.value;
         }
 
         private static double ConvertToUnixTimestamp(DateTime date)

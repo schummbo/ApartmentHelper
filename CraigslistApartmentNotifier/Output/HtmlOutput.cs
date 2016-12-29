@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Text;
     using Entities;
@@ -14,39 +13,24 @@
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<html><body>");
 
-            WriteTableHeader(sb, ConfidenceLevel.High);
-
-            foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == ConfidenceLevel.High)
-                                                                    .OrderBy(x => x.TravelInfo.TravelTimeSeconds))
+            foreach (string confidenceLevelName in Enum.GetNames(typeof(ConfidenceLevel)))
             {
-                WriteRow(apartmentListing, sb);
+                ConfidenceLevel confidenceLevel = (ConfidenceLevel)Enum.Parse(typeof(ConfidenceLevel), confidenceLevelName);
+
+                WriteTableHeader(sb, confidenceLevel);
+
+                foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
+                                                                        .OrderBy(x => x.TravelInfo.TravelTimeSeconds))
+                {
+                    WriteRow(apartmentListing, sb);
+                }
+
+                sb.AppendLine("</table>");
             }
-            sb.AppendLine("</table>");
-
-
-            WriteTableHeader(sb, ConfidenceLevel.Medium);
-
-            foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == ConfidenceLevel.Medium)
-                                                                    .OrderBy(x => x.TravelInfo.TravelTimeSeconds))
-            {
-                WriteRow(apartmentListing, sb);
-            }
-
-            sb.AppendLine("</table>");
-
-
-            WriteTableHeader(sb, ConfidenceLevel.Low);
-
-            foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == ConfidenceLevel.Low))
-            {
-                WriteRow(apartmentListing, sb);
-            }
-
-            sb.AppendLine("</table>");
 
             sb.AppendLine("</body></html>");
 
-           return sb.ToString();
+            return sb.ToString();
         }
 
         private static void WriteTableHeader(StringBuilder sb, ConfidenceLevel confidenceLevel)
@@ -59,6 +43,7 @@
             sb.AppendLine($"<td>Price</td>");
             sb.AppendLine($"<td>Housing</td>");
             sb.AppendLine($"<td>Travel Time (mins)</td>");
+            sb.AppendLine($"<td>Busses</td>");
             sb.AppendLine("</tr>");
         }
 
@@ -80,7 +65,8 @@
                 sb.AppendLine($"<td>?</td>");
             }
 
-            
+            sb.AppendLine($"<td>{listing.TravelInfo.NumberOfBuses}</td>");
+
             sb.AppendLine("</tr>");
         }
     }

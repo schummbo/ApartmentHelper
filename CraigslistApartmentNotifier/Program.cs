@@ -29,29 +29,36 @@
 
             foreach (HtmlNode apartmentNode in document.DocumentNode.SelectNodes("//a[contains(@class, 'hdrlnk')]"))
             {
-                Console.WriteLine("Processing apartment...");
-
                 ApartmentListing listing = new ApartmentListing
                 {
                     Url = $"http://seattle.craigslist.org{apartmentNode.Attributes["href"].Value}"
                 };
 
-                HtmlWeb listingHw = new HtmlWeb();
-                HtmlDocument listDocument = listingHw.Load(listing.Url);
+                try
+                {
+                    Console.WriteLine("Processing apartment...");
+                    
+                    HtmlWeb listingHw = new HtmlWeb();
+                    HtmlDocument listDocument = listingHw.Load(listing.Url);
 
-                Title title = new TitleParser().Parse(listDocument.DocumentNode);
+                    Title title = new TitleParser().Parse(listDocument.DocumentNode);
 
-                listing.Title = title.Text;
-                listing.Price = title.Price;
-                listing.Housing = title.Housing;
+                    listing.Title = title.Text;
+                    listing.Price = title.Price;
+                    listing.Housing = title.Housing;
 
-                listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
+                    listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
 
-                listing.TravelInfo = new RouteHelper().GetTravelInfo(listing);
+                    listing.TravelInfo = new RouteHelper().GetTravelInfo(listing);
 
-                listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
+                    listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
 
-                listings.Add(listing);
+                    listings.Add(listing);
+                }
+                catch (Exception ex)
+                {
+                    listing.ConfidenceLevel = ConfidenceLevel.Failed;
+                }
             }
 
             string html = new HtmlOutput().Execute(listings);

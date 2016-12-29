@@ -4,6 +4,6 @@
     {
         public int? TravelTimeSeconds { get; set; }
 
-        public int NumberOfTransfers { get; set; }
+        public int NumberOfBuses { get; set; }
     }
 }

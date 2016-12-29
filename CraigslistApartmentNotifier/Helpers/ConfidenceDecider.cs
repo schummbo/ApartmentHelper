@@ -16,6 +16,11 @@
             if (listing.TravelInfo.TravelTimeSeconds.HasValue && listing.TravelInfo?.TravelTimeSeconds.Value <= 3600)
             {
                 level = ConfidenceLevel.High;
+
+                if (listing.TravelInfo.NumberOfBuses == 1)
+                {
+                    level = ConfidenceLevel.ReallyHigh;
+                }
             }
 
             return level;

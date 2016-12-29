@@ -2,8 +2,10 @@
 {
     public enum ConfidenceLevel
     {
+        ReallyHigh,
         High,
         Medium,
-        Low
+        Low,
+        Failed
     }
 }
