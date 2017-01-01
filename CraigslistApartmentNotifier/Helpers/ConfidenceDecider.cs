@@ -18,11 +18,11 @@
             {
                 level = ConfidenceLevel.Medium;
 
-                if (listing.TravelInfo.NumberOfBuses == 1)
+                if (string.Equals(listing.CityName, "seattle", StringComparison.InvariantCultureIgnoreCase))
                 {
                     level = ConfidenceLevel.High;
 
-                    if (string.Equals(listing.CityName, "seattle", StringComparison.InvariantCultureIgnoreCase))
+                    if (listing.TravelInfo.NumberOfBuses == 1)
                     {
                         level = ConfidenceLevel.Perfect;
                     }

@@ -21,7 +21,7 @@
 
                 foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
                                                                         .OrderBy(x => x.TravelInfo.TravelTimeSeconds)
-                                                                        .ThenBy(x => x.TravelInfo.WalkingTimeSeconds))
+                                                                        .ThenBy(x => x.TravelInfo.WalkingTimes?.FirstOrDefault() ?? 0))
                 {
                     WriteRow(apartmentListing, sb);
                 }
@@ -70,9 +70,9 @@
 
             sb.AppendLine($"<td>{listing.TravelInfo.NumberOfBuses}</td>");
 
-            TimeSpan walkingTime = TimeSpan.FromSeconds(listing.TravelInfo.WalkingTimeSeconds);
+            var walkingTimes = listing.TravelInfo.WalkingTimes?.Select(x => TimeSpan.FromSeconds(x).Minutes.ToString());
 
-            sb.AppendLine($"<td>{walkingTime.Minutes} m</td>");
+            sb.AppendLine($"<td>{string.Join(" &#47; ", walkingTimes ?? new string[0])}</td>");
             sb.AppendLine($"<td>{listing.CityName}</td>");
 
             sb.AppendLine("</tr>");

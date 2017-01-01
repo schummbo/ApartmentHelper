@@ -23,7 +23,7 @@
 
             HtmlWeb list = new HtmlWeb();
 
-            HtmlDocument document = list.Load("http://seattle.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price=2000&pets_dog=1");
+            HtmlDocument document = list.Load("http://seattle.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price=1800&pets_dog=1");
 
             Console.WriteLine("Got the listing. Enumerating.");
 
@@ -65,7 +65,7 @@
 
             string html = new HtmlOutput().Execute(listings);
 
-            File.WriteAllText("Apartments.html", html);
+            File.WriteAllText($"Apartments-{DateTime.Now.ToString("yy_MM_dd_hh_mm")}.html", html);
         }
     }
 }

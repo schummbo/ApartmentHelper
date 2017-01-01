@@ -16,26 +16,33 @@
         {
             TravelInfo travelInfo = new TravelInfo();
 
+            if (listing.Origin == null)
+            {
+                return travelInfo;
+            }
+
             JObject googleResponse = GetGoogleDirectionsResponse(listing);
 
             travelInfo.TravelTimeSeconds = GetTravelDuration(googleResponse);
 
             travelInfo.NumberOfBuses = GetNumberOfBuses(googleResponse);
 
-            travelInfo.WalkingTimeSeconds = GetTotalWalkingTime(googleResponse);
+            travelInfo.WalkingTimes = GetTotalWalkingTimes(googleResponse);
 
             return travelInfo;
         }
 
-        private int GetTotalWalkingTime(JObject googleResponse)
+        private List<int> GetTotalWalkingTimes(JObject googleResponse)
         {
             dynamic resp = googleResponse;
 
             IEnumerable<dynamic> steps = ((IEnumerable)resp.routes[0].legs[0].steps).Cast<dynamic>();
 
-            IEnumerable<dynamic> transitSteps = steps.Where(x => x.travel_mode == "WALKING");
+            IEnumerable<dynamic> walkingSteps = steps.Where(x => x.travel_mode == "WALKING");
 
-            return transitSteps.Sum(x => x.duration.value);
+            return walkingSteps.Select(ws => Convert.ToInt32(ws.duration.value))
+                                .Cast<int>()
+                                .ToList();
         }
 
         private JObject GetGoogleDirectionsResponse(ApartmentListing listing)
