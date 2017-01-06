@@ -53,14 +53,16 @@
             string encodedDestination = HttpUtility.UrlEncode(destination);
             string encodedOrigin = HttpUtility.UrlEncode(listing.Origin);
 
-            // need to make sure this isn't a weekend
-            DateTime tomorrow = DateTime.Now.AddDays(1);
-            DateTime next9 = new DateTime(tomorrow.Year, tomorrow.Month, tomorrow.Day, 9, 0, 0);
+            DateTime today = DateTime.Today;
+
+            int daysUntilNextMonday = ((int)DayOfWeek.Monday - (int)today.DayOfWeek + 7) % 7;
+            DateTime nextMonday = today.AddDays(daysUntilNextMonday);
+            DateTime nextMondayAt9 = new DateTime(nextMonday.Year, nextMonday.Month, nextMonday.Day, 9, 0, 0);
             
-            int tomorrowAt9 = (int)ConvertToUnixTimestamp(next9);
+            int mondayAt9Unix = (int)ConvertToUnixTimestamp(nextMondayAt9);
 
             string url =
-                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={tomorrowAt9}&transit_routing_preference=fewer_transfers&key={apiKey}";
+                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={mondayAt9Unix}&transit_routing_preference=fewer_transfers&key={apiKey}";
 
             WebClient client = new WebClient();
             string json = client.DownloadString(url);
