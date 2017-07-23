@@ -1,4 +1,6 @@
-﻿namespace CraigslistApartmentNotifier
+﻿using System.Configuration;
+
+namespace CraigslistApartmentNotifier
 {
     using System;
     using System.Collections.Generic;
@@ -23,7 +25,7 @@
 
             HtmlWeb list = new HtmlWeb();
 
-            HtmlDocument document = list.Load("http://seattle.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price=1800&pets_dog=1");
+            HtmlDocument document = list.Load($"http://seattle.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={ConfigurationManager.AppSettings["MaxPrice"]}&pets_dog=1");
 
             Console.WriteLine("Got the listing. Enumerating.");
 

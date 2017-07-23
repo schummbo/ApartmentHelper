@@ -1,4 +1,4 @@
-﻿namespace CraigslistApartmentNotifier.Helpers
+﻿    namespace CraigslistApartmentNotifier.Helpers
 {
     using System;
     using Entities;
