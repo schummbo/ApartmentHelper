@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Linq;
 
 namespace CraigslistApartmentNotifier
 {
@@ -24,16 +25,28 @@ namespace CraigslistApartmentNotifier
             Console.WriteLine("About to go to craigslist.");
 
             HtmlWeb list = new HtmlWeb();
-
-            HtmlDocument document = list.Load($"http://seattle.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={ConfigurationManager.AppSettings["MaxPrice"]}&pets_dog=1");
+            var url =
+                $"http://bellingham.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={ConfigurationManager.AppSettings["MaxPrice"]}&pets_dog=1";
+            HtmlDocument document = list.Load(url);
 
             Console.WriteLine("Got the listing. Enumerating.");
 
-            foreach (HtmlNode apartmentNode in document.DocumentNode.SelectNodes("//a[contains(@class, 'hdrlnk')]"))
+            // Check for nodes before the "nearby" row which appears if there aren't many results for the searched area
+            var apartmentNodes =
+                document.DocumentNode.SelectNodes(
+                    "//ul[contains(@class, 'rows')]/h4/preceding-sibling::li//a[contains(@class, 'hdrlnk')]");
+
+            // if no nodes, then that "nearby" row probably didn't show. Just get the apartments.
+            if (!apartmentNodes.Any())
+            {
+                apartmentNodes = document.DocumentNode.SelectNodes("//a[contains(@class, 'hdrlnk')]");
+            }
+
+            foreach (HtmlNode apartmentNode in apartmentNodes)
             {
                 ApartmentListing listing = new ApartmentListing
                 {
-                    Url = $"http://seattle.craigslist.org{apartmentNode.Attributes["href"].Value}"
+                    Url = apartmentNode.Attributes["href"].Value
                 };
 
                 try
@@ -47,7 +60,8 @@ namespace CraigslistApartmentNotifier
 
                     listing.Title = title.Text;
                     listing.Price = title.Price;
-                    listing.Housing = title.Housing;
+
+                    listing.Housing = new HousingHelper().GetHousingInfo(title);
 
                     listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
 
@@ -68,6 +82,8 @@ namespace CraigslistApartmentNotifier
             string html = new HtmlOutput().Execute(listings);
 
             File.WriteAllText($"Apartments-{DateTime.Now.ToString("yy_MM_dd_hh_mm")}.html", html);
+
+            System.Diagnostics.Process.Start("explorer.exe", Directory.GetCurrentDirectory());
         }
     }
 }

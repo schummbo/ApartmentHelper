@@ -16,7 +16,7 @@
         {
             TravelInfo travelInfo = new TravelInfo();
 
-            if (listing.Origin == null)
+            if (listing.Origin == null || string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["Destination"]))
             {
                 return travelInfo;
             }

@@ -20,8 +20,9 @@
                 WriteTableHeader(sb, confidenceLevel);
 
                 foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
-                                                                        .OrderBy(x => x.TravelInfo.TravelTimeSeconds)
-                                                                        .ThenBy(x => x.TravelInfo.WalkingTimes?.FirstOrDefault() ?? 0))
+                                                                        .OrderBy(x => x.Housing.Bedrooms)
+                                                                        .ThenBy(x => x.Housing.SqFt)
+                                                                        .ThenBy(x => x.Price))
                 {
                     WriteRow(apartmentListing, sb);
                 }
@@ -42,8 +43,8 @@
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td>Title</td>");
             sb.AppendLine($"<td>Price</td>");
-            sb.AppendLine($"<td>Housing</td>");
-            sb.AppendLine($"<td>Travel Time</td>");
+            sb.AppendLine($"<td>Bedrooms</td>");
+            sb.AppendLine("<td>SqFt</td>");
             sb.AppendLine($"<td>Buses</td>");
             sb.AppendLine($"<td>Walking</td>");
             sb.AppendLine($"<td>Locality</td>");
@@ -55,22 +56,12 @@
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td><a href='{listing.Url}'>{listing.Title}</a></td>");
             sb.AppendLine($"<td>{listing.Price.ToString("C")}</td>");
-            sb.AppendLine($"<td>{listing.Housing}</td>");
+            sb.AppendLine($"<td>{listing.Housing.Bedrooms}</td>");
+            sb.AppendLine($"<td>{listing.Housing.SqFt}</td>");
 
-            if (listing.TravelInfo.TravelTimeSeconds.HasValue)
-            {
-                TimeSpan t = TimeSpan.FromSeconds(listing.TravelInfo.TravelTimeSeconds.Value);
+            sb.AppendLine($"<td>{listing.TravelInfo?.NumberOfBuses}</td>");
 
-                sb.AppendLine($"<td>{t.Hours:D2}h:{t.Minutes:D2}m</td>");
-            }
-            else
-            {
-                sb.AppendLine($"<td>?</td>");
-            }
-
-            sb.AppendLine($"<td>{listing.TravelInfo.NumberOfBuses}</td>");
-
-            var walkingTimes = listing.TravelInfo.WalkingTimes?.Select(x => TimeSpan.FromSeconds(x).Minutes.ToString());
+            var walkingTimes = listing.TravelInfo?.WalkingTimes?.Select(x => TimeSpan.FromSeconds(x).Minutes.ToString());
 
             sb.AppendLine($"<td>{string.Join(" &#47; ", walkingTimes ?? new string[0])}</td>");
             sb.AppendLine($"<td>{listing.CityName}</td>");

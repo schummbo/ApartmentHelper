@@ -14,20 +14,17 @@
                 level = ConfidenceLevel.Low;
             }
 
-            if (listing.TravelInfo.TravelTimeSeconds.HasValue && listing.TravelInfo?.TravelTimeSeconds.Value <= 3600)
+            if (listing.Housing.Bedrooms.HasValue || listing.Housing.SqFt.HasValue)
             {
                 level = ConfidenceLevel.Medium;
-
-                if (string.Equals(listing.CityName, "seattle", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    level = ConfidenceLevel.High;
-
-                    if (listing.TravelInfo.NumberOfBuses == 1)
-                    {
-                        level = ConfidenceLevel.Perfect;
-                    }
-                }
             }
+
+            if (listing.Housing.Bedrooms.HasValue && listing.Housing.SqFt.HasValue)
+            {
+                level = ConfidenceLevel.High;
+            }
+
+
 
             return level;
         }
