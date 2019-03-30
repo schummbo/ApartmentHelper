@@ -7,16 +7,14 @@ namespace CraigslistHelper.Core.Parsers
     {
         public override Title Parse(HtmlNode documentNode)
         {
-            Title title = new Title();
+            var title = new Title();
 
-            HtmlNode titleNode = documentNode.SelectSingleNode("//h2[@class='postingtitle']");
+            var titleNode = documentNode.SelectSingleNode("//h2[@class='postingtitle']");
 
-            var priceode = titleNode.SelectSingleNode("//span[@class='price']");
-            if (priceode != null)
+            var priceNode = titleNode.SelectSingleNode("//span[@class='price']");
+            if (priceNode != null)
             {
-                int price;
-
-                if (int.TryParse(priceode.InnerText.Replace("$", ""), out price))
+                if (int.TryParse(priceNode.InnerText.Replace("$", ""), out var price))
                 {
                     title.Price = price;
                 }

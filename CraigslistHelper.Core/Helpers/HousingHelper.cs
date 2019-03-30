@@ -21,8 +21,6 @@ namespace CraigslistHelper.Core.Helpers
 
                 var match = regex.Match(listing.Housing.Trim());
 
-
-
                 if (int.TryParse(match.Groups[2].Value, out int bedrooms))
                 {
                     housingInfo.Bedrooms = bedrooms;
@@ -38,7 +36,6 @@ namespace CraigslistHelper.Core.Helpers
                 Console.WriteLine(e);
                 throw;
             }
-
 
             return housingInfo;
         }
