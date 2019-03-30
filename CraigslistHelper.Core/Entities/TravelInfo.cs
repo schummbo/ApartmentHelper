@@ -1,7 +1,7 @@
-﻿namespace CraigslistApartmentNotifier.Entities
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
+namespace CraigslistHelper.Core.Entities
+{
     public class TravelInfo
     {
         public int? TravelTimeSeconds { get; set; }

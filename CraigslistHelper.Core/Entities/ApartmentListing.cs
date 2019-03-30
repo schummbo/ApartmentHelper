@@ -1,4 +1,4 @@
-﻿namespace CraigslistApartmentNotifier.Entities
+﻿namespace CraigslistHelper.Core.Entities
 {
     public class ApartmentListing
     {
@@ -14,7 +14,7 @@
 
         public int Price { get; set; }
 
-        public string Housing { get; set; }
+        public HousingInfo Housing { get; set; }
 
         public string CityName { get; set; }
     }

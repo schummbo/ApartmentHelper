@@ -1,8 +1,8 @@
-﻿namespace CraigslistApartmentNotifier.Parsers
-{
-    using Entities;
-    using HtmlAgilityPack;
+﻿using CraigslistHelper.Core.Entities;
+using HtmlAgilityPack;
 
+namespace CraigslistHelper.Core.Parsers
+{
     public class TitleParser : BaseParser<Title>
     {
         public override Title Parse(HtmlNode documentNode)

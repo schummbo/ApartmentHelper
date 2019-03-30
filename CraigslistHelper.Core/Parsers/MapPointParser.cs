@@ -1,8 +1,8 @@
-﻿namespace CraigslistApartmentNotifier.Parsers
-{
-    using Entities;
-    using HtmlAgilityPack;
+﻿using CraigslistHelper.Core.Entities;
+using HtmlAgilityPack;
 
+namespace CraigslistHelper.Core.Parsers
+{
     public class MapPointParser : BaseParser<MapPoint>
     {
         public override MapPoint Parse(HtmlNode node)
