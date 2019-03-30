@@ -23,8 +23,6 @@
                 level = ConfidenceLevel.High;
             }
 
-
-
             return level;
         }
     }

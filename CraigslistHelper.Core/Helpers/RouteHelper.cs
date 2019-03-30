@@ -5,7 +5,6 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using CraigslistHelper.Core.Entities;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 namespace CraigslistHelper.Core.Helpers

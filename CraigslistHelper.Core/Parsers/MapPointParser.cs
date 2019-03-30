@@ -7,7 +7,7 @@ namespace CraigslistHelper.Core.Parsers
     {
         public override MapPoint Parse(HtmlNode node)
         {
-            HtmlNode mapNode = node.SelectSingleNode("//div[@id='map']");
+            var mapNode = node.SelectSingleNode("//div[@id='map']");
 
             if (mapNode == null)
             {
