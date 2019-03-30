@@ -6,6 +6,7 @@ using CraigslistHelper.Core.Entities;
 using CraigslistHelper.Core.Helpers;
 using CraigslistHelper.Core.Output;
 using CraigslistHelper.Core.Parsers;
+using CraigslistHelper.Core.Settings;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 
@@ -13,11 +14,11 @@ namespace CraigslistHelper
 {
     public class CraigslistHelperRunner
     {
-        private readonly IConfiguration _config;
+        private readonly Settings _settings;
 
-        public CraigslistHelperRunner(IConfiguration config)
+        public CraigslistHelperRunner(Settings settings)
         {
-            _config = config;
+            _settings = settings;
         }
 
         public void Run()
@@ -28,7 +29,7 @@ namespace CraigslistHelper
 
             HtmlWeb list = new HtmlWeb();
             var url =
-                $"http://bellingham.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={_config["maxPrice"]}&pets_dog=1";
+                $"http://bellingham.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={_settings.craigslistOptions.price.max}&pets_dog=1";
             HtmlDocument document = list.Load(url);
 
             Console.WriteLine("Got the listing. Enumerating.");
@@ -67,9 +68,9 @@ namespace CraigslistHelper
 
                     listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
 
-                    listing.TravelInfo = new RouteHelper(_config).GetTravelInfo(listing);
+                    listing.TravelInfo = new RouteHelper(_settings).GetTravelInfo(listing);
 
-                    listing.CityName = new CityHelper(_config).GetCityName(listing);
+                    listing.CityName = new CityHelper(_settings).GetCityName(listing);
 
                     listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
 

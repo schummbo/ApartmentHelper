@@ -12,20 +12,18 @@ namespace CraigslistHelper.Core.Helpers
 {
     public class RouteHelper
     {
-        private readonly string _destination;
-        private readonly string _googleDirectionsApiKey;
+        private readonly Settings.Settings _config;
 
-        public RouteHelper(IConfiguration config)
+        public RouteHelper(Settings.Settings config)
         {
-            _destination = config["destination"];
-            _googleDirectionsApiKey = config["GoogleDirectionsApiKey"];
+            _config = config;
         }
 
         public TravelInfo GetTravelInfo(ApartmentListing listing)
         {
             TravelInfo travelInfo = new TravelInfo();
 
-            if (listing.Origin == null || string.IsNullOrWhiteSpace(_destination))
+            if (listing.Origin == null || string.IsNullOrWhiteSpace(_config.destination))
             {
                 return travelInfo;
             }
@@ -56,7 +54,7 @@ namespace CraigslistHelper.Core.Helpers
 
         private JObject GetGoogleDirectionsResponse(ApartmentListing listing)
         {
-            string encodedDestination = HttpUtility.UrlEncode(_destination);
+            string encodedDestination = HttpUtility.UrlEncode(_config.destination);
             string encodedOrigin = HttpUtility.UrlEncode(listing.Origin);
 
             DateTime today = DateTime.Today;
@@ -68,7 +66,7 @@ namespace CraigslistHelper.Core.Helpers
             int mondayAt9Unix = (int)ConvertToUnixTimestamp(nextMondayAt9);
 
             string url =
-                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={mondayAt9Unix}&transit_routing_preference=fewer_transfers&key={_googleDirectionsApiKey}";
+                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={mondayAt9Unix}&transit_routing_preference=fewer_transfers&key={_config.googleDirectionsApiKey}";
 
             WebClient client = new WebClient();
             string json = client.DownloadString(url);

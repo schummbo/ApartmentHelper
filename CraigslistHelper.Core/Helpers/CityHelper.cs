@@ -2,7 +2,6 @@
 using System.Net;
 using System.Web;
 using CraigslistHelper.Core.Entities;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 namespace CraigslistHelper.Core.Helpers
@@ -11,9 +10,9 @@ namespace CraigslistHelper.Core.Helpers
     {
         private readonly string _geocodeApiKey;
 
-        public CityHelper(IConfiguration config)
+        public CityHelper(Settings.Settings config)
         {
-            _geocodeApiKey = config["googleGeocodeApiKey"];
+            _geocodeApiKey = config.googleGeocodeApiKey;
         }
 
         public string GetCityName(ApartmentListing listing)
