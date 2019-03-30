@@ -1,4 +1,4 @@
-﻿namespace CraigslistHelper.Core.Settings
+﻿namespace CraigslistHelper.Core.Entities
 {
     public class Settings
     {
@@ -10,6 +10,7 @@
 
     public class Craigslistoptions
     {
+        public string city { get; set; }
         public bool hasImage { get; set; }
         public bool postedToday { get; set; }
         public bool bundleDuplicates { get; set; }
@@ -23,7 +24,7 @@
         public bool furnished { get; set; }
         public bool noSmoking { get; set; }
         public bool wheelchairAccess { get; set; }
-        public object[] housingTypes { get; set; }
+        public HousingType[] housingTypes { get; set; }
     }
 
     public class Milesfromzip
@@ -34,20 +35,20 @@
 
     public class Price
     {
-        public int min { get; set; }
-        public int max { get; set; }
+        public int? min { get; set; }
+        public int? max { get; set; }
     }
 
     public class Bedrooms
     {
-        public int min { get; set; }
-        public int max { get; set; }
+        public int? min { get; set; }
+        public int? max { get; set; }
     }
 
     public class Sqft
     {
-        public int min { get; set; }
-        public int max { get; set; }
+        public int? min { get; set; }
+        public int? max { get; set; }
     }
 
 }

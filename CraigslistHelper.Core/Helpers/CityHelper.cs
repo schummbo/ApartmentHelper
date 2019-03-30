@@ -10,7 +10,7 @@ namespace CraigslistHelper.Core.Helpers
     {
         private readonly string _geocodeApiKey;
 
-        public CityHelper(Settings.Settings config)
+        public CityHelper(Settings config)
         {
             _geocodeApiKey = config.googleGeocodeApiKey;
         }

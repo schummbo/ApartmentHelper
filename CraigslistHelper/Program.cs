@@ -1,4 +1,4 @@
-﻿using CraigslistHelper.Core.Settings;
+﻿using CraigslistHelper.Core.Entities;
 using Microsoft.Extensions.Configuration;
 
 namespace CraigslistHelper

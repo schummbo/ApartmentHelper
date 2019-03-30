@@ -12,9 +12,9 @@ namespace CraigslistHelper.Core.Helpers
 {
     public class RouteHelper
     {
-        private readonly Settings.Settings _config;
+        private readonly Settings _config;
 
-        public RouteHelper(Settings.Settings config)
+        public RouteHelper(Settings config)
         {
             _config = config;
         }
