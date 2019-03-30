@@ -33,6 +33,16 @@ namespace CraigslistHelper
 
             Console.WriteLine("Got the listing. Enumerating.");
 
+            var noResultsNode = document.DocumentNode.SelectSingleNode(
+                "//div[contains(@class, 'alert-warning') and contains(text(), 'Nothing found')]");
+
+            if (noResultsNode != null)
+            {
+                Console.WriteLine("No results.");
+                Console.ReadKey();
+                return;
+            }
+
             // Check for nodes before the "nearby" row which appears if there aren't many results for the searched area
             var apartmentNodes =
                 document.DocumentNode.SelectNodes(
