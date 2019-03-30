@@ -1,24 +1,26 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using CraigslistHelper.Core.Entities;
+using CraigslistHelper.Core.Helpers;
+using CraigslistHelper.Core.Output;
+using CraigslistHelper.Core.Parsers;
+using HtmlAgilityPack;
+using Microsoft.Extensions.Configuration;
 
-namespace CraigslistApartmentNotifier
+namespace CraigslistHelper
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using Entities;
-    using Helpers;
-    using HtmlAgilityPack;
-    using Output;
-    using Parsers;
-
-    public class Program
+    public class CraigslistHelperRunner
     {
-        /// <summary>
-        /// Mains the specified arguments.
-        /// </summary>
-        /// <param name="args">The arguments.</param>
-        static void Main(string[] args)
+        private readonly IConfiguration _config;
+
+        public CraigslistHelperRunner(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        public void Run()
         {
             List<ApartmentListing> listings = new List<ApartmentListing>();
 
@@ -26,7 +28,7 @@ namespace CraigslistApartmentNotifier
 
             HtmlWeb list = new HtmlWeb();
             var url =
-                $"http://bellingham.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={ConfigurationManager.AppSettings["MaxPrice"]}&pets_dog=1";
+                $"http://bellingham.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={_config["maxPrice"]}&pets_dog=1";
             HtmlDocument document = list.Load(url);
 
             Console.WriteLine("Got the listing. Enumerating.");
@@ -52,7 +54,7 @@ namespace CraigslistApartmentNotifier
                 try
                 {
                     Console.WriteLine("Processing apartment...");
-                    
+
                     HtmlWeb listingHw = new HtmlWeb();
                     HtmlDocument listDocument = listingHw.Load(listing.Url);
 
@@ -65,15 +67,15 @@ namespace CraigslistApartmentNotifier
 
                     listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
 
-                    listing.TravelInfo = new RouteHelper().GetTravelInfo(listing);
+                    listing.TravelInfo = new RouteHelper(_config).GetTravelInfo(listing);
 
-                    listing.CityName = new CityHelper().GetCityName(listing);
+                    listing.CityName = new CityHelper(_config).GetCityName(listing);
 
                     listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
 
                     listings.Add(listing);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     listing.ConfidenceLevel = ConfidenceLevel.Failed;
                 }
@@ -81,7 +83,7 @@ namespace CraigslistApartmentNotifier
 
             string html = new HtmlOutput().Execute(listings);
 
-            File.WriteAllText($"Apartments-{DateTime.Now.ToString("yy_MM_dd_hh_mm")}.html", html);
+            File.WriteAllText($"Apartments-{DateTime.Now:yy_MM_dd_hh_mm}.html", html);
 
             System.Diagnostics.Process.Start("explorer.exe", Directory.GetCurrentDirectory());
         }

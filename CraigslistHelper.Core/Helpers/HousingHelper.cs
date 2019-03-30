@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using CraigslistApartmentNotifier.Entities;
+using CraigslistHelper.Core.Entities;
 
-namespace CraigslistApartmentNotifier.Helpers
+namespace CraigslistHelper.Core.Helpers
 {
     public class HousingHelper
     {

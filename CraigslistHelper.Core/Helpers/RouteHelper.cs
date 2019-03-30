@@ -1,22 +1,31 @@
-﻿namespace CraigslistApartmentNotifier.Helpers
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Linq;
-    using System.Net;
-    using System.Web;
-    using Entities;
-    using Newtonsoft.Json.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Web;
+using CraigslistHelper.Core.Entities;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 
+namespace CraigslistHelper.Core.Helpers
+{
     public class RouteHelper
     {
+        private readonly string _destination;
+        private readonly string _googleDirectionsApiKey;
+
+        public RouteHelper(IConfiguration config)
+        {
+            _destination = config["destination"];
+            _googleDirectionsApiKey = config["GoogleDirectionsApiKey"];
+        }
+
         public TravelInfo GetTravelInfo(ApartmentListing listing)
         {
             TravelInfo travelInfo = new TravelInfo();
 
-            if (listing.Origin == null || string.IsNullOrWhiteSpace(ConfigurationManager.AppSettings["Destination"]))
+            if (listing.Origin == null || string.IsNullOrWhiteSpace(_destination))
             {
                 return travelInfo;
             }
@@ -47,10 +56,7 @@
 
         private JObject GetGoogleDirectionsResponse(ApartmentListing listing)
         {
-            string apiKey = ConfigurationManager.AppSettings["GoogleDirectionsApiKey"];
-            string destination = ConfigurationManager.AppSettings["Destination"];
-
-            string encodedDestination = HttpUtility.UrlEncode(destination);
+            string encodedDestination = HttpUtility.UrlEncode(_destination);
             string encodedOrigin = HttpUtility.UrlEncode(listing.Origin);
 
             DateTime today = DateTime.Today;
@@ -62,7 +68,7 @@
             int mondayAt9Unix = (int)ConvertToUnixTimestamp(nextMondayAt9);
 
             string url =
-                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={mondayAt9Unix}&transit_routing_preference=fewer_transfers&key={apiKey}";
+                $"https://maps.googleapis.com/maps/api/directions/json?origin={encodedOrigin}&destination={encodedDestination}&mode=transit&arrival_time={mondayAt9Unix}&transit_routing_preference=fewer_transfers&key={_googleDirectionsApiKey}";
 
             WebClient client = new WebClient();
             string json = client.DownloadString(url);

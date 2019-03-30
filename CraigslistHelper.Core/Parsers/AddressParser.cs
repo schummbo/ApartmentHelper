@@ -1,7 +1,7 @@
-﻿namespace CraigslistApartmentNotifier.Parsers
-{
-    using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 
+namespace CraigslistHelper.Core.Parsers
+{
     public class AddressParser : BaseParser<string>
     {
         public override string Parse(HtmlNode node)

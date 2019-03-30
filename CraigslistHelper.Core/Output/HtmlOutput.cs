@@ -1,11 +1,11 @@
-﻿namespace CraigslistApartmentNotifier.Output
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using CraigslistHelper.Core.Entities;
 
+namespace CraigslistHelper.Core.Output
+{
     public class HtmlOutput
     {
         public string Execute(List<ApartmentListing> apartments)
