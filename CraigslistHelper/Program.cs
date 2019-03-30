@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using CraigslistHelper.Core.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace CraigslistHelper
 {
@@ -10,7 +11,10 @@ namespace CraigslistHelper
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-            new CraigslistHelperRunner(config).Run();
+            var settings = new Settings();
+            config.Bind(settings);
+
+            new CraigslistHelperRunner(settings).Run();
         }
     }
 }

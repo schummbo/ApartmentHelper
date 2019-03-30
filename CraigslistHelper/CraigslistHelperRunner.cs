@@ -7,17 +7,16 @@ using CraigslistHelper.Core.Helpers;
 using CraigslistHelper.Core.Output;
 using CraigslistHelper.Core.Parsers;
 using HtmlAgilityPack;
-using Microsoft.Extensions.Configuration;
 
 namespace CraigslistHelper
 {
     public class CraigslistHelperRunner
     {
-        private readonly IConfiguration _config;
+        private readonly Settings _settings;
 
-        public CraigslistHelperRunner(IConfiguration config)
+        public CraigslistHelperRunner(Settings settings)
         {
-            _config = config;
+            _settings = settings;
         }
 
         public void Run()
@@ -27,8 +26,9 @@ namespace CraigslistHelper
             Console.WriteLine("About to go to craigslist.");
 
             HtmlWeb list = new HtmlWeb();
-            var url =
-                $"http://bellingham.craigslist.org/search/apa?hasPic=1&postedToday=1&max_price={_config["maxPrice"]}&pets_dog=1";
+
+            var url = new CraigslistUrlBuilder(_settings).BuildUrl();
+
             HtmlDocument document = list.Load(url);
 
             Console.WriteLine("Got the listing. Enumerating.");
@@ -39,7 +39,7 @@ namespace CraigslistHelper
                     "//ul[contains(@class, 'rows')]/h4/preceding-sibling::li//a[contains(@class, 'hdrlnk')]");
 
             // if no nodes, then that "nearby" row probably didn't show. Just get the apartments.
-            if (!apartmentNodes.Any())
+            if (apartmentNodes == null || !apartmentNodes.Any())
             {
                 apartmentNodes = document.DocumentNode.SelectNodes("//a[contains(@class, 'hdrlnk')]");
             }
@@ -67,9 +67,9 @@ namespace CraigslistHelper
 
                     listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
 
-                    listing.TravelInfo = new RouteHelper(_config).GetTravelInfo(listing);
+                    listing.TravelInfo = new RouteHelper(_settings).GetTravelInfo(listing);
 
-                    listing.CityName = new CityHelper(_config).GetCityName(listing);
+                    listing.CityName = new CityHelper(_settings).GetCityName(listing);
 
                     listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
 
