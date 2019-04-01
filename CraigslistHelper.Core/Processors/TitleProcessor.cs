@@ -1,15 +1,15 @@
 ﻿using CraigslistHelper.Core.Entities;
 using HtmlAgilityPack;
 
-namespace CraigslistHelper.Core.Parsers
+namespace CraigslistHelper.Core.Processors
 {
-    public class TitleParser : BaseParser<Title>
+    public class TitleProcessor : BaseProcessor
     {
-        public override Title Parse(HtmlNode documentNode)
+        public override void Parse(HtmlNode node, ApartmentListing listing)
         {
             var title = new Title();
 
-            var titleNode = documentNode.SelectSingleNode("//h2[@class='postingtitle']");
+            var titleNode = node.SelectSingleNode("//h2[@class='postingtitle']");
 
             var priceNode = titleNode.SelectSingleNode("//span[@class='price']");
             if (priceNode != null)
@@ -22,8 +22,12 @@ namespace CraigslistHelper.Core.Parsers
 
             title.Housing = titleNode.SelectSingleNode("//span[@class='housing']")?.InnerText.Replace("/", "");
             title.Text = titleNode.SelectSingleNode("//span[@id='titletextonly']")?.InnerText;
+            listing.Title = title.Text;
+            listing.Price = title.Price;
+        }
 
-            return title;
+        public TitleProcessor(Settings settings) : base(settings)
+        {
         }
     }
 }

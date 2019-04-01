@@ -12,7 +12,7 @@
 
         public ConfidenceLevel ConfidenceLevel { get; set; }
 
-        public int Price { get; set; }
+        public int? Price { get; set; }
 
         public HousingInfo Housing { get; set; }
 
