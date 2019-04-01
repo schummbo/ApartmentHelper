@@ -2,15 +2,16 @@
 using System.Net;
 using System.Web;
 using CraigslistHelper.Core.Entities;
+using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 
-namespace CraigslistHelper.Core.Helpers
+namespace CraigslistHelper.Core.Processors
 {
-    public class CityHelper
+    public class CityProcessor : BaseProcessor
     {
         private readonly string _geocodeApiKey;
 
-        public CityHelper(Settings config)
+        public CityProcessor(Settings config) : base(config)
         {
             _geocodeApiKey = config.googleGeocodeApiKey;
         }
@@ -49,6 +50,12 @@ namespace CraigslistHelper.Core.Helpers
             }
 
             return null;
+        }
+
+        public override void Parse(HtmlNode node, ApartmentListing listing)
+        {
+            var cityName = GetCityName(listing);
+            listing.CityName = cityName;
         }
     }
 }

@@ -1,24 +1,29 @@
 ﻿using CraigslistHelper.Core.Entities;
 using HtmlAgilityPack;
 
-namespace CraigslistHelper.Core.Parsers
+namespace CraigslistHelper.Core.Processors
 {
-    public class MapPointParser : BaseParser<MapPoint>
+    public class MapPointProcessor : BaseProcessor
     {
-        public override MapPoint Parse(HtmlNode node)
+        public override void Parse(HtmlNode node, ApartmentListing listing)
         {
             var mapNode = node.SelectSingleNode("//div[@id='map']");
 
             if (mapNode == null)
             {
-                return null;
+                listing.Origin = null;
+                return;
             }
 
-            return new MapPoint
+            listing.Origin = new MapPoint
             {
                 Latitude = mapNode.Attributes["data-latitude"].Value,
                 Longitude = mapNode.Attributes["data-longitude"].Value
             };
+        }
+
+        public MapPointProcessor(Settings settings) : base(settings)
+        {
         }
     }
 }

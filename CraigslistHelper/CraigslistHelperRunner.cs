@@ -5,7 +5,6 @@ using System.Linq;
 using CraigslistHelper.Core.Entities;
 using CraigslistHelper.Core.Helpers;
 using CraigslistHelper.Core.Output;
-using CraigslistHelper.Core.Parsers;
 using HtmlAgilityPack;
 
 namespace CraigslistHelper
@@ -33,17 +32,29 @@ namespace CraigslistHelper
 
             Console.WriteLine("Got the listing. Enumerating.");
 
-            var noResultsNode = document.DocumentNode.SelectSingleNode(
-                "//div[contains(@class, 'alert-warning') and contains(text(), 'Nothing found')]");
+            var apartments = GetApartments(document);
 
-            if (noResultsNode != null)
+            var listingParser = new ListingParser(_settings);
+
+            foreach (HtmlNode apartment in apartments)
             {
-                Console.WriteLine("No results.");
-                Console.ReadKey();
-                return;
+                ApartmentListing listing = listingParser.ParseListing(apartment);
+
+                listings.Add(listing);
+
+                listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
             }
 
-            // Check for nodes before the "nearby" row which appears if there aren't many results for the searched area
+            string html = new HtmlOutput().Execute(listings);
+
+            File.WriteAllText($"Apartments-{DateTime.Now:yy_MM_dd_hh_mm}.html", html);
+
+            System.Diagnostics.Process.Start("explorer.exe", Directory.GetCurrentDirectory());
+        }
+
+        private static HtmlNodeCollection GetApartments(HtmlDocument document)
+        {
+// Check for nodes before the "nearby" row which appears if there aren't many results for the searched area
             var apartmentNodes =
                 document.DocumentNode.SelectNodes(
                     "//ul[contains(@class, 'rows')]/h4/preceding-sibling::li//a[contains(@class, 'hdrlnk')]");
@@ -54,48 +65,7 @@ namespace CraigslistHelper
                 apartmentNodes = document.DocumentNode.SelectNodes("//a[contains(@class, 'hdrlnk')]");
             }
 
-            foreach (HtmlNode apartmentNode in apartmentNodes)
-            {
-                ApartmentListing listing = new ApartmentListing
-                {
-                    Url = apartmentNode.Attributes["href"].Value
-                };
-
-                try
-                {
-                    Console.WriteLine("Processing apartment...");
-
-                    HtmlWeb listingHw = new HtmlWeb();
-                    HtmlDocument listDocument = listingHw.Load(listing.Url);
-
-                    Title title = new TitleParser().Parse(listDocument.DocumentNode);
-
-                    listing.Title = title.Text;
-                    listing.Price = title.Price;
-
-                    listing.Housing = new HousingHelper().GetHousingInfo(title);
-
-                    listing.Origin = new MapPointParser().Parse(listDocument.DocumentNode);
-
-                    listing.TravelInfo = new RouteHelper(_settings).GetTravelInfo(listing);
-
-                    listing.CityName = new CityHelper(_settings).GetCityName(listing);
-
-                    listing.ConfidenceLevel = new ConfidenceDecider().GetConfidenceLevel(listing);
-
-                    listings.Add(listing);
-                }
-                catch (Exception)
-                {
-                    listing.ConfidenceLevel = ConfidenceLevel.Failed;
-                }
-            }
-
-            string html = new HtmlOutput().Execute(listings);
-
-            File.WriteAllText($"Apartments-{DateTime.Now:yy_MM_dd_hh_mm}.html", html);
-
-            System.Diagnostics.Process.Start("explorer.exe", Directory.GetCurrentDirectory());
+            return apartmentNodes;
         }
     }
 }

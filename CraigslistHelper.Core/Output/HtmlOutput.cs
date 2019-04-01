@@ -55,7 +55,7 @@ namespace CraigslistHelper.Core.Output
         {
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td><a href='{listing.Url}'>{listing.Title}</a></td>");
-            sb.AppendLine($"<td>{listing.Price.ToString("C")}</td>");
+            sb.AppendLine($"<td>{listing.Price?.ToString("C")}</td>");
             sb.AppendLine($"<td>{listing.Housing.Bedrooms}</td>");
             sb.AppendLine($"<td>{listing.Housing.SqFt}</td>");
 

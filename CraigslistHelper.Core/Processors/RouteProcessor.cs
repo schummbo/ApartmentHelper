@@ -5,20 +5,16 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using CraigslistHelper.Core.Entities;
+using HtmlAgilityPack;
 using Newtonsoft.Json.Linq;
 
-namespace CraigslistHelper.Core.Helpers
+namespace CraigslistHelper.Core.Processors
 {
-    public class RouteHelper
+    public class RouteProcessor : BaseProcessor
     {
         private readonly Settings _config;
 
-        public RouteHelper(Settings config)
-        {
-            _config = config;
-        }
-
-        public TravelInfo GetTravelInfo(ApartmentListing listing)
+        private TravelInfo GetTravelInfo(ApartmentListing listing)
         {
             TravelInfo travelInfo = new TravelInfo();
 
@@ -96,6 +92,17 @@ namespace CraigslistHelper.Core.Helpers
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             TimeSpan diff = date.ToUniversalTime() - origin;
             return Math.Floor(diff.TotalSeconds);
+        }
+
+        public override void Parse(HtmlNode node, ApartmentListing listing)
+        {
+            var travelInfo = this.GetTravelInfo(listing);
+            listing.TravelInfo = travelInfo;
+        }
+
+        public RouteProcessor(Settings settings) : base(settings)
+        {
+            _config = settings;
         }
     }
 }
