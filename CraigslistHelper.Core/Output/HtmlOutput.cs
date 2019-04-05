@@ -10,29 +10,29 @@ namespace CraigslistHelper.Core.Output
     {
         public string Execute(List<ApartmentListing> apartments)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("<html><body>");
+            //StringBuilder sb = new StringBuilder();
+            //sb.AppendLine("<html><body>");
 
-            foreach (string confidenceLevelName in Enum.GetNames(typeof(ConfidenceLevel)))
-            {
-                ConfidenceLevel confidenceLevel = (ConfidenceLevel)Enum.Parse(typeof(ConfidenceLevel), confidenceLevelName);
+            //foreach (string confidenceLevelName in Enum.GetNames(typeof(ConfidenceLevel)))
+            //{
+            //    ConfidenceLevel confidenceLevel = (ConfidenceLevel)Enum.Parse(typeof(ConfidenceLevel), confidenceLevelName);
 
-                WriteTableHeader(sb, confidenceLevel);
+            //    WriteTableHeader(sb, confidenceLevel);
 
-                foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
-                                                                        .OrderBy(x => x.Housing.Bedrooms)
-                                                                        .ThenBy(x => x.Housing.SqFt)
-                                                                        .ThenBy(x => x.Price))
-                {
-                    WriteRow(apartmentListing, sb);
-                }
+            //    foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
+            //                                                            .OrderBy(x => x.Housing.Bedrooms)
+            //                                                            .ThenBy(x => x.Housing.SqFt)
+            //                                                            .ThenBy(x => x.Price))
+            //    {
+            //        WriteRow(apartmentListing, sb);
+            //    }
 
-                sb.AppendLine("</table>");
-            }
+            //    sb.AppendLine("</table>");
+            //}
 
-            sb.AppendLine("</body></html>");
+            //sb.AppendLine("</body></html>");
 
-            return sb.ToString();
+            return "";
         }
 
         private static void WriteTableHeader(StringBuilder sb, ConfidenceLevel confidenceLevel)

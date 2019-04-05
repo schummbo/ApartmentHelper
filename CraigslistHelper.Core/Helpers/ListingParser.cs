@@ -45,7 +45,7 @@ namespace CraigslistHelper.Core.Helpers
             }
             catch (Exception)
             {
-                listing.ConfidenceLevel = ConfidenceLevel.Failed;
+                //listing.ConfidenceLevel = ConfidenceLevel.Failed;
             }
 
             return listing;
