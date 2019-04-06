@@ -4,11 +4,11 @@ using CraigslistHelper.Core.Entities;
 
 namespace CraigslistHelper.Core.Evaluators
 {
-    public class ScoreEvaluator
+    public class ScoreCalculator
     {
         private readonly List<BaseEvaluator> _evaluators;
 
-        public ScoreEvaluator(List<BaseEvaluator> evaluators)
+        public ScoreCalculator(List<BaseEvaluator> evaluators)
         {
             _evaluators = evaluators;
         }

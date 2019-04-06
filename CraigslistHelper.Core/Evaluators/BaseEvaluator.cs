@@ -4,10 +4,10 @@ namespace CraigslistHelper.Core.Evaluators
 {
     public abstract class BaseEvaluator
     {
-        private const int Perfect = 10;
-        private const int Acceptable = 5;
-        private const int NotGreat = 1;
-        private const int NoGo = 0;
+        protected const int Perfect = 10;
+        protected const int Acceptable = 5;
+        protected const int NotGreat = 1;
+        protected const int NoGo = 0;
 
         protected Range PerfectRange;
         protected Range AcceptableRange;

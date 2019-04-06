@@ -13,10 +13,12 @@ namespace CraigslistHelper
     public class CraigslistHelperRunner
     {
         private readonly Settings _settings;
+        private readonly List<BaseEvaluator> _evaluators;
 
-        public CraigslistHelperRunner(Settings settings)
+        public CraigslistHelperRunner(Settings settings, List<BaseEvaluator> evaluators)
         {
             _settings = settings;
+            _evaluators = evaluators;
         }
 
         public void Run()
@@ -37,7 +39,7 @@ namespace CraigslistHelper
 
             var listingParser = new ListingParser(_settings);
 
-            var scoreEvaluator = new ScoreEvaluator(CreateEvaluators());
+            var scoreEvaluator = new ScoreCalculator(_evaluators);
 
             foreach (HtmlNode apartment in apartments)
             {
@@ -53,17 +55,6 @@ namespace CraigslistHelper
             File.WriteAllText($"Apartments-{DateTime.Now:yy_MM_dd_hh_mm}.html", html);
 
             System.Diagnostics.Process.Start("explorer.exe", Directory.GetCurrentDirectory());
-        }
-
-        private List<BaseEvaluator> CreateEvaluators()
-        {
-            return new List<BaseEvaluator>
-            {
-                new PriceEvaluator(new Range { Max = 1500, Min = 0 }, new Range { Max = 2000, Min = 1501 }),
-                new TravelTimeEvaluator(new Range { Max = 30 * 60, Min = 0 }, new Range { Max = 60 * 60, Min = 31 * 60 }),
-                new BedroomEvaluator(new Range { Max = 1, Min = 2 }, new Range { Max = 3, Min = 3 }),
-                new SquareFootEvaluator(new Range { Max = 1000, Min = 700 }, new Range { Max = 1500, Min = 701 })
-            };
         }
 
         private static HtmlNodeCollection GetApartments(HtmlDocument document)

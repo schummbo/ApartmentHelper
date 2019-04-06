@@ -1,4 +1,6 @@
-﻿namespace CraigslistHelper.Core.Entities
+﻿using System.Collections.Generic;
+
+namespace CraigslistHelper.Core.Entities
 {
     public class Settings
     {
@@ -6,6 +8,7 @@
         public string googleDirectionsApiKey { get; set; }
         public string destination { get; set; }
         public Craigslistoptions craigslistOptions { get; set; }
+        public EvaluatorDefinition[] Evaluators { get; set; }
     }
 
     public class Craigslistoptions
