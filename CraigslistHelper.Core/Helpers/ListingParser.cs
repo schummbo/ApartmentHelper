@@ -18,7 +18,8 @@ namespace CraigslistHelper.Core.Helpers
                 new HousingProcessor(settings),
                 new MapPointProcessor(settings),
                 new RouteProcessor(settings),
-                new CityProcessor(settings)
+                new CityProcessor(settings),
+                new BodyProcessor(settings)
             };
         }
 

@@ -22,8 +22,10 @@ namespace CraigslistHelper.Core.Processors
 
             title.Housing = titleNode.SelectSingleNode("//span[@class='housing']")?.InnerText.Replace("/", "");
             title.Text = titleNode.SelectSingleNode("//span[@id='titletextonly']")?.InnerText;
+            title.Town = titleNode.SelectSingleNode("//small")?.InnerText;
             listing.Title = title.Text;
             listing.Price = title.Price;
+            listing.CityName = title.Town;
         }
 
         public TitleProcessor(Settings settings) : base(settings)

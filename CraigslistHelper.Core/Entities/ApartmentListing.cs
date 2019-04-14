@@ -1,4 +1,6 @@
-﻿namespace CraigslistHelper.Core.Entities
+﻿using System.Collections.Generic;
+
+namespace CraigslistHelper.Core.Entities
 {
     public class ApartmentListing
     {
@@ -17,5 +19,9 @@
         public string CityName { get; set; }
 
         public double Score { get; set; }
+
+        public List<string> ScoreReasons { get; set; } = new List<string>();
+
+        public string Body { get; set; }
     }
 }

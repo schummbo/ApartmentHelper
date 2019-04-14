@@ -40,6 +40,7 @@ namespace CraigslistHelper.Core.Output
             sb.AppendLine("<td>SqFt</td>");
             sb.AppendLine($"<td>Score</td>");
             sb.AppendLine($"<td>Locality</td>");
+            sb.AppendLine($"<td>Score Breakdown</td>");
             sb.AppendLine("</tr>");
         }
 
@@ -48,11 +49,12 @@ namespace CraigslistHelper.Core.Output
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td><a href='{listing.Url}'>{listing.Title}</a></td>");
             sb.AppendLine($"<td>{listing.Price?.ToString("C")}</td>");
-            sb.AppendLine($"<td>{listing.Housing.Bedrooms}</td>");
-            sb.AppendLine($"<td>{listing.Housing.SqFt}</td>");
+            sb.AppendLine($"<td>{listing.Housing?.Bedrooms}</td>");
+            sb.AppendLine($"<td>{listing.Housing?.SqFt}</td>");
 
             sb.AppendLine($"<td>{listing.Score}</td>");
             sb.AppendLine($"<td>{listing.CityName}</td>");
+            sb.AppendLine($"<td>{string.Join("<br/>", listing.ScoreReasons)}</td>");
 
             sb.AppendLine("</tr>");
         }

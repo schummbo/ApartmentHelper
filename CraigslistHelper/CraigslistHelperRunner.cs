@@ -45,16 +45,29 @@ namespace CraigslistHelper
             {
                 ApartmentListing listing = listingParser.ParseListing(apartment);
 
-                listings.Add(listing);
-
                 listing.Score = scoreEvaluator.GetApartmentScore(listing);
+
+                if (ShouldBeSkipped(_settings, listing))
+                {
+                    Console.WriteLine("Skipping...");
+                }
+                else
+                {
+                    listings.Add(listing);
+                }
             }
 
             string html = new HtmlOutput().Execute(listings);
 
-            File.WriteAllText($"Apartments-{DateTime.Now:yy_MM_dd_hh_mm}.html", html);
+            var filePath = Path.Combine(_settings.saveFileLocation, $"Apartments-{DateTime.Now:yy_MM_dd_hh_mm}.html");
 
-            System.Diagnostics.Process.Start("explorer.exe", Directory.GetCurrentDirectory());
+            File.WriteAllText(filePath, html);
+        }
+
+        private bool ShouldBeSkipped(Settings settings, ApartmentListing listing)
+        {
+            return (_settings.hideZeros && listing.Score <= 0) ||
+                   settings.bannedPhrases.Any(bannedPhrase => listing.Body?.Contains(bannedPhrase) ?? false);
         }
 
         private static HtmlNodeCollection GetApartments(HtmlDocument document)

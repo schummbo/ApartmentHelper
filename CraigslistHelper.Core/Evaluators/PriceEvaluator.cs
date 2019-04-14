@@ -4,13 +4,17 @@ namespace CraigslistHelper.Core.Evaluators
 {
     public class PriceEvaluator : BaseEvaluator
     {
-        public PriceEvaluator(Range perfectRange, Range acceptableRange) : base(perfectRange, acceptableRange)
+        public PriceEvaluator(Range perfectRange, Range acceptableRange, Settings settings) : base(perfectRange, acceptableRange, settings)
         {
         }
 
         public override double Evaluate(ApartmentListing listing)
         {
-            return EvaluateInternal(listing.Price);
+            var score = EvaluateInternal(listing.Price);
+
+            listing.ScoreReasons.Add($"Price Score: {score}");
+
+            return score;
         }
     }
 }

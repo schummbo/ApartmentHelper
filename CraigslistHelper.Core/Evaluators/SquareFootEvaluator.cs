@@ -4,13 +4,17 @@ namespace CraigslistHelper.Core.Evaluators
 {
     public class SquareFootEvaluator : BaseEvaluator
     {
-        public SquareFootEvaluator(Range perfectRange, Range acceptableRange) : base(perfectRange, acceptableRange)
+        public SquareFootEvaluator(Range perfectRange, Range acceptableRange, Settings settings) : base(perfectRange, acceptableRange, settings)
         {
         }
 
         public override double Evaluate(ApartmentListing listing)
         {
-            return EvaluateInternal(listing.Housing?.SqFt);
+            var score = EvaluateInternal(listing.Housing?.SqFt);
+
+            listing.ScoreReasons.Add($"Square Foot Score: {score}");
+
+            return score;
         }
     }
 }

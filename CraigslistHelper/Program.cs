@@ -18,10 +18,10 @@ namespace CraigslistHelper
             var settings = new Settings();
             config.Bind(settings);
 
-            new CraigslistHelperRunner(settings, CreateEvaluators(settings.Evaluators)).Run();
+            new CraigslistHelperRunner(settings, CreateEvaluators(settings.Evaluators, settings)).Run();
         }
 
-        private static List<BaseEvaluator> CreateEvaluators(EvaluatorDefinition[] evaluatorDefinitions)
+        private static List<BaseEvaluator> CreateEvaluators(EvaluatorDefinition[] evaluatorDefinitions, Settings settings)
         {
             List<BaseEvaluator> evals = new List<BaseEvaluator>();
 
@@ -29,10 +29,9 @@ namespace CraigslistHelper
             {
                 Type type = Type.GetType($"CraigslistHelper.Core.Evaluators.{evaluatorDefinition.Type}, CraigslistHelper.Core");
 
-                object[] args = { evaluatorDefinition.PerfectRange, evaluatorDefinition.AcceptableRange };
+                object[] args = { evaluatorDefinition.PerfectRange, evaluatorDefinition.AcceptableRange, settings };
 
                 var instance = (BaseEvaluator)Activator.CreateInstance(type, args);
-
                 
                 evals.Add(instance);
             }

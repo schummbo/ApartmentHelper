@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Web;
 using CraigslistHelper.Core.Entities;
 using HtmlAgilityPack;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 namespace CraigslistHelper.Core.Processors
@@ -23,39 +25,28 @@ namespace CraigslistHelper.Core.Processors
                 return null;
             }
 
-            string encodedOrigin = HttpUtility.UrlEncode(listing.Origin);
+            Thread.Sleep(250);
+
+            var coords = listing.Origin.Split(',');
 
             string url =
-                $"https://maps.googleapis.com/maps/api/geocode/json?latlng={encodedOrigin}&key={_geocodeApiKey}";
+                $"https://us1.locationiq.com/v1/reverse.php?key={_geocodeApiKey}&lat={coords[0]}&lon={coords[1]}&format=json";
 
             WebClient webClient = new WebClient();
             string json = webClient.DownloadString(url);
 
             dynamic origin = JObject.Parse(json);
 
-            IEnumerable<dynamic> results = origin.results;
+            var city = origin?.address?.city;
 
-            foreach (dynamic result in results)
-            {
-                foreach (dynamic addressComponent in result.address_components)
-                {
-                    foreach (dynamic type in addressComponent.types)
-                    {
-                        if (type.ToString() == "locality")
-                        {
-                            return addressComponent.long_name;
-                        }
-                    }
-                }
-            }
-
-            return null;
+            return city;
         }
 
         public override void Parse(HtmlNode node, ApartmentListing listing)
         {
             var cityName = GetCityName(listing);
-            listing.CityName = cityName;
+            if (!string.IsNullOrWhiteSpace(cityName))
+                listing.CityName = cityName;
         }
     }
 }

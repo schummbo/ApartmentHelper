@@ -9,15 +9,18 @@ namespace CraigslistHelper.Core.Evaluators
         protected const int NotGreat = 1;
         protected const int NoGo = 0;
 
-        protected Range PerfectRange;
-        protected Range AcceptableRange;
+        protected Range PerfectRange { get; set; }
+        protected Range AcceptableRange { get; set; }
+
+        protected Settings Settings { get; set; }
 
         public bool Disabled { get; set; }
 
-        protected BaseEvaluator(Range perfectRange, Range acceptableRange)
+        protected BaseEvaluator(Range perfectRange, Range acceptableRange, Settings setting)
         {
             PerfectRange = perfectRange;
             AcceptableRange = acceptableRange;
+            Settings = setting;
         }
 
         public abstract double Evaluate(ApartmentListing listing);
