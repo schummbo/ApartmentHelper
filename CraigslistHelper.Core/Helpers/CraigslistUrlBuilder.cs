@@ -106,7 +106,7 @@ namespace CraigslistHelper.Core.Helpers
 
             var pars = string.Join("&", qaParams.ToArray());
 
-            return $"https://{_settings.craigslistOptions.city}.craigslist.org/search/apa?{pars}";
+            return $"https://{_settings.craigslistOptions.region}.craigslist.org/search/apa?{pars}";
         }
     }
 }

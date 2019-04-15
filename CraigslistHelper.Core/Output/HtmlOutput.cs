@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CraigslistHelper.Core.Entities;
@@ -13,41 +12,36 @@ namespace CraigslistHelper.Core.Output
             StringBuilder sb = new StringBuilder();
             sb.AppendLine("<html><body>");
 
-            foreach (string confidenceLevelName in Enum.GetNames(typeof(ConfidenceLevel)))
+
+
+            WriteTableHeader(sb);
+
+            foreach (ApartmentListing apartmentListing in apartments.OrderByDescending(x => x.Score))
             {
-                ConfidenceLevel confidenceLevel = (ConfidenceLevel)Enum.Parse(typeof(ConfidenceLevel), confidenceLevelName);
-
-                WriteTableHeader(sb, confidenceLevel);
-
-                foreach (ApartmentListing apartmentListing in apartments.Where(x => x.ConfidenceLevel == confidenceLevel)
-                                                                        .OrderBy(x => x.Housing.Bedrooms)
-                                                                        .ThenBy(x => x.Housing.SqFt)
-                                                                        .ThenBy(x => x.Price))
-                {
-                    WriteRow(apartmentListing, sb);
-                }
-
-                sb.AppendLine("</table>");
+                WriteRow(apartmentListing, sb);
             }
+
+            sb.AppendLine("</table>");
+
 
             sb.AppendLine("</body></html>");
 
             return sb.ToString();
         }
 
-        private static void WriteTableHeader(StringBuilder sb, ConfidenceLevel confidenceLevel)
+        private static void WriteTableHeader(StringBuilder sb)
         {
-            sb.AppendLine($"<h3>{confidenceLevel} Confidence</h3>");
             sb.AppendLine("<table border='1'>");
 
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td>Title</td>");
             sb.AppendLine($"<td>Price</td>");
+            sb.AppendLine($"<td>Housing Type</td>");
             sb.AppendLine($"<td>Bedrooms</td>");
             sb.AppendLine("<td>SqFt</td>");
-            sb.AppendLine($"<td>Buses</td>");
-            sb.AppendLine($"<td>Walking</td>");
+            sb.AppendLine($"<td>Score</td>");
             sb.AppendLine($"<td>Locality</td>");
+            sb.AppendLine($"<td>Score Breakdown</td>");
             sb.AppendLine("</tr>");
         }
 
@@ -56,15 +50,13 @@ namespace CraigslistHelper.Core.Output
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td><a href='{listing.Url}'>{listing.Title}</a></td>");
             sb.AppendLine($"<td>{listing.Price?.ToString("C")}</td>");
-            sb.AppendLine($"<td>{listing.Housing.Bedrooms}</td>");
-            sb.AppendLine($"<td>{listing.Housing.SqFt}</td>");
+            sb.AppendLine($"<td>{listing.Housing?.HousingType}</td>");
+            sb.AppendLine($"<td>{listing.Housing?.Bedrooms}</td>");
+            sb.AppendLine($"<td>{listing.Housing?.SqFt}</td>");
 
-            sb.AppendLine($"<td>{listing.TravelInfo?.NumberOfBuses}</td>");
-
-            var walkingTimes = listing.TravelInfo?.WalkingTimes?.Select(x => TimeSpan.FromSeconds(x).Minutes.ToString());
-
-            sb.AppendLine($"<td>{string.Join(" &#47; ", walkingTimes ?? new string[0])}</td>");
+            sb.AppendLine($"<td>{listing.Score}</td>");
             sb.AppendLine($"<td>{listing.CityName}</td>");
+            sb.AppendLine($"<td>{string.Join("<br/>", listing.ScoreReasons)}</td>");
 
             sb.AppendLine("</tr>");
         }

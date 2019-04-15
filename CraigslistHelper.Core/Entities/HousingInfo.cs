@@ -4,5 +4,6 @@
     {
         public int? Bedrooms { get; set; }
         public int? SqFt { get; set; }
+        public HousingType HousingType { get; set; }
     }
 }

@@ -2,10 +2,10 @@
 {
     public class Range
     {
-        public int Min { get; set; }
-        public int Max { get; set; }
+        public double Min { get; set; }
+        public double Max { get; set; }
 
-        public bool IsBetweenInclusive(int value)
+        public bool IsBetweenInclusive(double value)
         {
             return value >= Min && value <= Max;
         }
