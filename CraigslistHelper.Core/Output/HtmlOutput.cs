@@ -36,6 +36,7 @@ namespace CraigslistHelper.Core.Output
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td>Title</td>");
             sb.AppendLine($"<td>Price</td>");
+            sb.AppendLine($"<td>Housing Type</td>");
             sb.AppendLine($"<td>Bedrooms</td>");
             sb.AppendLine("<td>SqFt</td>");
             sb.AppendLine($"<td>Score</td>");
@@ -49,6 +50,7 @@ namespace CraigslistHelper.Core.Output
             sb.AppendLine("<tr>");
             sb.AppendLine($"<td><a href='{listing.Url}'>{listing.Title}</a></td>");
             sb.AppendLine($"<td>{listing.Price?.ToString("C")}</td>");
+            sb.AppendLine($"<td>{listing.Housing?.HousingType}</td>");
             sb.AppendLine($"<td>{listing.Housing?.Bedrooms}</td>");
             sb.AppendLine($"<td>{listing.Housing?.SqFt}</td>");
 

@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using CraigslistHelper.Core.Entities;
 using HtmlAgilityPack;
 
@@ -29,8 +30,24 @@ namespace CraigslistHelper.Core.Processors
                     housingInfo.SqFt = sqft;
                 }
 
-                listing.Housing = housingInfo;
             }
+
+            var attributeNodes = node.SelectNodes("//p[contains(@class,'attrgroup')]/span");
+
+            foreach (var attributeNode in attributeNodes)
+            {
+                var sanitizedText = attributeNode.InnerText.Replace("/", "")
+                                                            .Replace("-", "")
+                                                            .Replace(" ", "");
+
+                if (Enum.TryParse(sanitizedText, true, out HousingType result))
+                {
+                    housingInfo.HousingType = result;
+                    break;
+                }
+            }
+
+            listing.Housing = housingInfo;
         }
 
         public HousingProcessor(Settings settings) : base(settings)
